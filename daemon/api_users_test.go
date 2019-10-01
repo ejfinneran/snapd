@@ -242,6 +242,20 @@ var badUser = map[string]interface{}{
 	"until":        time.Now().Add(24 * 30 * time.Hour).Format(time.RFC3339),
 }
 
+var badUserGoodEmail = map[string]interface{}{
+	// bad user (but has the same brand/email as the good user)
+	"authority-id": "my-brand",
+	"brand-id":     "my-brand",
+	"email":        "foo@bar.com",
+	"series":       []interface{}{"16", "18"},
+	"models":       []interface{}{"non-of-the-models-i-have"},
+	"name":         "Random Gal",
+	"username":     "gal",
+	"password":     "$6$salt$hash",
+	"since":        time.Now().Format(time.RFC3339),
+	"until":        time.Now().Add(24 * 30 * time.Hour).Format(time.RFC3339),
+}
+
 var unknownUser = map[string]interface{}{
 	"authority-id": "unknown",
 	"brand-id":     "my-brand",
@@ -368,7 +382,7 @@ func (s *userSuite) TestPostCreateUserFromAssertionWithForcePasswordChange(c *ch
 }
 
 func (s *userSuite) TestPostCreateUserFromAssertionAllKnown(c *check.C) {
-	s.makeSystemUsers(c, []map[string]interface{}{goodUser, partnerUser, badUser, unknownUser})
+	s.makeSystemUsers(c, []map[string]interface{}{badUserGoodEmail, goodUser, partnerUser, unknownUser})
 	created := map[string]bool{}
 	// mock the calls that create the user
 	osutilAddUser = func(username string, opts *osutil.AddUserOptions) error {
